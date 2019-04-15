@@ -1,6 +1,9 @@
 #include <iostream>
 #include <array>
 #include <optional>
+#include <algorithm>
+#include <iterator>
+#include <sstream>
 
 constexpr static std::size_t BoardWidth = 9;
 
@@ -55,22 +58,13 @@ private:
         std::cout << "  | | | | | | | | |\n";
     }
     void showRow(std::size_t rowNumber) const {
+            auto fieldLambda = [](const auto& field) {
+                    return field ? field->getRepr(): '+';
+            };
             std::cout << rowNumber << ' ';
-            for(auto col = 0; col < BoardWidth - 1; ++col) {
-                const auto & field = fields[rowNumber - 1][col];
-                if(!field) {
-                    std::cout << '+';
-                } else {
-                    std::cout << field->getRepr();
-                }
-                std::cout << '-';
-            }
-            const auto & field = fields[rowNumber - 1][BoardWidth - 1];
-            if(!field) {
-                std::cout << '+';
-            } else {
-                std::cout << field->getRepr();
-            }
+            std::transform(fields[rowNumber - 1].cbegin(), std::prev(fields[rowNumber - 1].cend()),
+                std::ostream_iterator<char>(std::cout, "-"), fieldLambda);
+            std::cout << fieldLambda(*fields[rowNumber - 1].crbegin());
             std::cout << ' ' << rowNumber << '\n';
     }
     std::array<std::array<std::optional<Stone>, BoardWidth>, BoardWidth> fields;
