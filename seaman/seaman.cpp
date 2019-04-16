@@ -52,8 +52,8 @@ private:
             } else {
                 break;
             }
-            std::this_thread::sleep_for(SleepTime + std::chrono::milliseconds(5 * delta));
-            //std::this_thread::sleep_for(SleepTime - std::chrono::milliseconds(5 * delta));
+            //std::this_thread::sleep_for(SleepTime + std::chrono::milliseconds(5 * delta));
+            std::this_thread::sleep_for(SleepTime - std::chrono::milliseconds(5 * delta));
         }
     }
 
@@ -64,7 +64,7 @@ private:
     mutable std::mutex mtx;
     std::thread leftThread;
     std::thread rightThread;
-    bool stop;
+    bool stop; // TODO: atomic!
     std::size_t road_width;
     std::size_t position;
 };
