@@ -1,0 +1,49 @@
+#include "board_visitor.hpp"
+#include <ostream>
+
+BoardVisitor::BoardVisitor(std::ostream& os)
+        : os{os}, fieldsPtr{nullptr} {}
+    void visit(const FieldsContainer& fields) {
+        fieldsPtr = &fields;
+    }
+    void show() const {
+        showColName();
+        auto rowNumber = BoardWidth + 1;
+        while(--rowNumber > 1) {
+            showRow(rowNumber);
+            showSeparator();
+        }
+        showRow(1);
+        showColName();
+    }
+
+void BoardVisitor::visit(FieldsContainer& fields) {
+    this->fields = &fields;
+}
+
+void BoardVisitor::showColName() const {
+    std::cout << "  ";
+    char c = 'a';
+    std::generate_n(std::ostream_iterator<char>(std::cout, " "), BoardWidth,
+    [&]() {
+        return c++;
+    });
+    std::cout << '\n';
+    }
+
+void BoardVisitor::showSeparator() const {
+    std::cout << "  ";
+    std::fill_n(std::ostream_iterator<char>(std::cout, " "), BoardWidth, '|');
+    std::cout << '\n';
+}
+
+void BoardVisitor::showRow(std::size_t rowNumber) const {
+        auto fieldLambda = [](const auto& field) {
+            return field ? field->getRepr(): '+';
+        };
+        std::cout << rowNumber << ' ';
+        std::transform(fields[rowNumber - 1].cbegin(), std::prev(fields[rowNumber - 1].cend()),
+                   std::ostream_iterator<char>(std::cout, "-"), fieldLambda);
+        std::cout << fieldLambda(*fields[rowNumber - 1].crbegin());
+        std::cout << ' ' << rowNumber << '\n';
+    }
