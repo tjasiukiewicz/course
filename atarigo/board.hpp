@@ -12,7 +12,7 @@ class Board {
 public:
     using FieldsContainer = std::array<std::array<std::optional<Stone>, BoardWidth>, BoardWidth>;
     Board();
-    void dropStone(Stone&& stone, std::size_t col, std::size_t row);
+    bool dropStone(Stone&& stone, std::size_t col, std::size_t row);
     void accept(BoardVisitor& visitor) const;
 private:
     FieldsContainer fields;

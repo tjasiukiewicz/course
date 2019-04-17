@@ -1,7 +1,7 @@
 CXXFLAGS:= -std=c++17 -Wall -Wextra -pedantic
 LDFLAGS:=
 CXX:= g++
-OBJECTS:= main.o board.o stone.o board_visitor.o
+OBJECTS:= main.o board.o stone.o board_visitor.o player.o game.o player_builder.o
 
 main: $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o main $(OBJECTS)
