@@ -1,0 +1,1 @@
+template struct X<int>;
