@@ -2,52 +2,47 @@
 #include "board.hpp"
 #include <ostream>
 #include <algorithm>
+
 namespace {
 
-void showColName(std::ostream& os) {
-    os << "  ";
+void showColName(const Streams& streams) {
+    streams.os << "  ";
     char c = 'a';
-    std::generate_n(std::ostream_iterator<char>(os, " "), BoardWidth,
-    [&]() {
-        return c++;
+    std::generate_n(std::ostream_iterator<char>(streams.os, " "), BoardWidth,
+        [&]() {
+            return c++;
     });
-    os << '\n';
+    streams.os << '\n';
 }
 
-void showSeparator(std::ostream& os) {
-    os << "  ";
-    std::fill_n(std::ostream_iterator<char>(os, " "), BoardWidth, '|');
-    os << '\n';
+void showSeparator(const Streams& streams) {
+    streams.os << "  ";
+    std::fill_n(std::ostream_iterator<char>(streams.os, " "), BoardWidth, '|');
+    streams.os << '\n';
 }
 
-void showRow(std::ostream& os, const Board::FieldsContainer * fieldsPtr, std::size_t rowNumber) {
+void showRow(const Streams& streams, const Board::FieldsContainer& fields, std::size_t rowNumber) {
     auto fieldLambda = [](const auto& field) {
         return field ? field->getRepr(): '+';
     };
-    os << rowNumber << ' ';
-    std::transform((*fieldsPtr)[rowNumber - 1].cbegin(), std::prev((*fieldsPtr)[rowNumber - 1].cend()),
-                   std::ostream_iterator<char>(os, "-"), fieldLambda);
-    os << fieldLambda(*(*fieldsPtr)[rowNumber - 1].crbegin());
-    os << ' ' << rowNumber << '\n';
+    streams.os << rowNumber << ' ';
+    std::transform(fields[rowNumber - 1].cbegin(), std::prev(fields[rowNumber - 1].cend()),
+                   std::ostream_iterator<char>(streams.os, "-"), fieldLambda);
+    streams.os << fieldLambda(*(fields[rowNumber - 1].crbegin())) << ' ' << rowNumber << '\n';
 }
 
 } // anonumous namespace
 
-BoardVisitor::BoardVisitor(std::ostream& os)
-    : os{os}, fieldsPtr{nullptr} {}
+BoardVisitor::BoardVisitor(const Streams& streams)
+    : streams{streams} {}
 
-void BoardVisitor::visit(const Board::FieldsContainer& fields) {
-    fieldsPtr = &fields;
-}
-
-void BoardVisitor::show() const {
-    showColName(os);
+void BoardVisitor::visit(const Board::FieldsContainer& fields) const {
+    showColName(streams);
     auto rowNumber = BoardWidth + 1;
     while(--rowNumber > 1) {
-        showRow(os, fieldsPtr, rowNumber);
-        showSeparator(os);
+        showRow(streams, fields, rowNumber);
+        showSeparator(streams);
     }
-    showRow(os, fieldsPtr, 1);
-    showColName(os);
+    showRow(streams, fields, 1);
+    showColName(streams);
 }
-

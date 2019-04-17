@@ -2,13 +2,12 @@
 
 #include <ostream>
 #include "board.hpp"
+#include "streams.hpp"
 
 class BoardVisitor {
 public:
-    explicit BoardVisitor(std::ostream& os);
-    void visit(const Board::FieldsContainer& fields);
-    void show() const;
+    explicit BoardVisitor(const Streams& streams);
+    void visit(const Board::FieldsContainer& fields) const;
 private:
-    std::ostream& os;
-    const Board::FieldsContainer * fieldsPtr;
+    Streams streams;
 };

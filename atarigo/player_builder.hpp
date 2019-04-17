@@ -4,6 +4,7 @@
 #include <memory>
 
 class Player;
+struct Streams;
 
 class PlayerBuilder {
 public:
@@ -12,6 +13,6 @@ public:
         HumanVsAI,
         AIVsAI
     };
-    static std::pair<std::unique_ptr<Player>, std::unique_ptr<Player>> makePlayers(GameKind kind);
+    static std::pair<std::unique_ptr<Player>, std::unique_ptr<Player>> makePlayers(const Streams& streams, GameKind kind);
 };
 

@@ -1,22 +1,24 @@
 #pragma once
 
 #include <memory>
-#include "player.hpp"
 
-class BoardVisitor;
 class Player;
+class BoardVisitor;
 class Board;
+class GameFacade;
+struct Streams;
 
 class Game {
 public:
-    Game(BoardVisitor&& boardVisitor);
+    Game(const Streams& streams);
     void run();
-    ~Game() = default;
+    ~Game();
 private:
-      std::unique_ptr<BoardVisitor> boardVisitor;
-      std::unique_ptr<Player> currentPlayer;
-      std::unique_ptr<Player> nextPlayer;
-      std::unique_ptr<Board> board;
+    const std::unique_ptr<BoardVisitor> boardVisitor;
+    std::unique_ptr<Player> currentPlayer;
+    std::unique_ptr<Player> nextPlayer;
+    const std::unique_ptr<Board> board;
+    const std::unique_ptr<GameFacade> facade;
 };
 
 
