@@ -2,8 +2,11 @@
 #include <functional>
 #include <tuple>
 #include <map>
+#include <chrono>
+#include <thread>
 
 double foo1(int val) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     return val * 3.14;
 }
 
@@ -28,14 +31,24 @@ std::function<typename std::result_of<Func(Args...)>::type(Args...)> memoize1(Fu
 
 template<typename ReturnValue, typename... Args>
 std::function<ReturnValue(Args...)> memoize2(ReturnValue (*func)(Args...)) {
-    std::cout << "In wrapper....\n";
     std::map<std::tuple<Args...>, ReturnValue> cache;
-    return [=](Args... args) {
-        return func(std::forward<Args>(args)...);
+    return [=](Args... args) mutable {
+        auto key = std::make_tuple(args...);
+        auto it = cache.find(key);
+        if(it == cache.end()) {
+            auto result = func(std::forward<Args>(args)...);
+            cache[key] = result;
+            std::cout << "Cache MISS!!\n";
+            return cache[key];
+        }
+        std::cout << "Cache HINT!!\n";
+        return it->second;
     };
 }
 
 int main() {
-    std::cout << memoize2(foo1)(12) << '\n';
-    std::cout << memoize2(foo2)(2, 3) << '\n';
+    auto cachedMemoize2 = memoize2(foo1);
+    std::cout << cachedMemoize2(12) << '\n';
+    std::cout << cachedMemoize2(15) << '\n';
+    std::cout << cachedMemoize2(12) << '\n';
 }
