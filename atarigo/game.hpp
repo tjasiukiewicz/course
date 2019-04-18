@@ -6,6 +6,7 @@ class Player;
 class BoardVisitor;
 class Board;
 class GameFacade;
+class GameRule;
 struct Streams;
 
 class Game {
@@ -19,6 +20,7 @@ private:
     std::unique_ptr<Player> nextPlayer;
     const std::unique_ptr<Board> board;
     const std::unique_ptr<GameFacade> facade;
+    const std::unique_ptr<GameRule> rule;
 };
 
 

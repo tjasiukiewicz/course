@@ -1,11 +1,11 @@
 #include "board.hpp"
-#include "board_visitor.hpp"
+#include "iboard_visitor.hpp"
 #include "drop_effect.hpp"
 
 Board::Board()
     : fields{} {}
 
-void Board::accept(const BoardVisitor& visitor) const {
+void Board::accept(const IBoardVisitor& visitor) const {
     visitor.visit(fields);
 }
 

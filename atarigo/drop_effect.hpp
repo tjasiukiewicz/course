@@ -3,5 +3,6 @@
 enum class DropEffect {
     Success,
     SameStone,
-    OtherStone
+    OtherStone,
+    NoBreath
 };

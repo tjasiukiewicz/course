@@ -9,5 +9,7 @@ void GameFacade::moveError(DropEffect effect) const {
         streams.es << "Na podanej pozycji znajduje się Twój kamień!\n";
     } else if(effect == DropEffect::OtherStone) {
         streams.es << "Na podanej pozycji znajduje sią kamień przeciwnika!\n";
+    } else if(effect == DropEffect::NoBreath) {
+        streams.es << "Na podanej pozycji brakuje oddechów!\n";
     }
 }
